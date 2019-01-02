@@ -1,29 +1,47 @@
 import io.reactivex.Observable;
-import io.reactivex.subjects.AsyncSubject;
-import io.reactivex.subjects.BehaviorSubject;
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.*;
 
 import java.util.concurrent.TimeUnit;
 
 public class Subject {
 
     public static void main(String[] args) {
-        asyncSubject();
+        unicastSubject();
+    }
+
+
+    /*
+    UnicastSubject keeps emissions in buffer until the observer subscribes.
+    First, observer receives all emissions from buffer and then live streaming starts
+    from that point on.
+    Remember UnicastSubject works with only one observer.
+    */
+    private static void unicastSubject() {
+
+        UnicastSubject unicastSubject = UnicastSubject.create();
+
+        Observable <Long> observable = Observable.
+                interval(500, TimeUnit.MILLISECONDS);
+
+        observable.subscribe(unicastSubject);
+        Sleep(3);
+
+        observable.subscribe(emtr -> System.out.println(emtr + " Subscribe"));
+        Sleep(5);
     }
 
     private static void asyncSubject() {
 
         AsyncSubject asyncSubject = AsyncSubject.create();
 
-        asyncSubject.subscribe(emtr -> System.out.println("Replay1: " + emtr));
+        asyncSubject.subscribe(emtr -> System.out.println("Replay 1: " + emtr));
 
         asyncSubject.onNext("One");
         asyncSubject.onNext("Two");
         asyncSubject.onNext("Three");
         asyncSubject.onComplete();
 
-        asyncSubject.subscribe(emtr -> System.out.println("Replay2: " + emtr));
+        asyncSubject.subscribe(emtr -> System.out.println("Replay 2: " + emtr));
     }
 
     private static void replaySubject() {
@@ -51,8 +69,8 @@ public class Subject {
         subject.onNext("Three");
 
         subject.subscribe(emtr -> System.out.println("Obs2: "+emtr));
-
     }
+
 
     private static void publishSubjectWithTwoObservable(){
 
@@ -82,8 +100,8 @@ public class Subject {
         subject.onNext("One");
         subject.onNext("Two");
         subject.onNext("Three");
-
     }
+
 
     public static void Sleep(long seconds){
         try {
