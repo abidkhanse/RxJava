@@ -9,7 +9,6 @@ public class Subject {
         unicastSubject();
     }
 
-
     /*
     UnicastSubject keeps emissions in buffer until the observer subscribes.
     First, observer receives all emissions from buffer and then live streaming starts
